@@ -1,0 +1,10 @@
+.venv
+*.pyc
+*~
+.coverage
+coverage.xml
+nosetests.xml
+.project
+TODO
+mine.py
+pymetric.egg-info

@@ -1,0 +1,17 @@
+machine:
+  python:
+    version: 3.5.0
+
+dependencies:
+  pre:
+    - pip install -r requirements.txt
+    - pip install -r dev_requirements.txt
+
+test:
+  override:
+    - flake8 pymetric/ tests/
+    - nosetests --with-coverage --cover-package=pymetric --cover-xml --cover-xml-file=coverage.xml --with-xunit --xunit-file=nosetests.xml
+  post:
+    - cp coverage.xml $CIRCLE_TEST_REPORTS/
+    - cp nosetests.xml $CIRCLE_TEST_REPORTS/
+
