@@ -68,7 +68,6 @@ class _PublisherHandler(Thread):
         self.timer = None
 
     def run(self):
-        log.info('Stating publisher handler')
         while True:
             time.sleep(self.interval)
             self.publish()
