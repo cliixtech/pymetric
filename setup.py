@@ -19,7 +19,7 @@ def get_requirements(filename):
 
 setup(
     name='pymetric',
-    version=1.1,
+    version=1.2,
     description=('Simple abstraction layer for pushing metrics to influx '
                  'periodically. Includes a wsgi middleware for compute '
                  'metrics for web apps'),

@@ -14,9 +14,18 @@ class MetricWsgiApp:
         start = time.perf_counter()
 
         def wrap_start_response(status, response_headers, exc_info=None):
-            code = {'wsgi.status_code': int(status.split()[0])}
+            resp_length = 0
+            for k, v in response_headers:
+                if k.lower() == 'content-length':
+                    resp_length = v
+                    break
+
+            info = {'wsgi.status_code': int(status.split()[0]),
+                    'wsgi.path_info': environ.get('PATH_INFO'),
+                    'wsgi.request_length': environ.get('CONTENT_LENGTH', 0),
+                    'wsgi.response_length': resp_length}
             metrics.append(metric("wsgi.requests", value=1,
-                                  tags=code))
+                                  tags=info))
             return start_response(status, response_headers, exc_info)
 
         response = self._app(environ, wrap_start_response)
