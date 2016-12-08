@@ -11,27 +11,32 @@ class MetricWsgiApp:
 
     def __call__(self, environ, start_response):
         metrics = []
-        start = time.perf_counter()
 
         def wrap_start_response(status, response_headers, exc_info=None):
+            req_length = int(environ.get('CONTENT_LENGTH', 0))
             resp_length = 0
             for k, v in response_headers:
                 if k.lower() == 'content-length':
-                    resp_length = v
+                    resp_length = int(v)
                     break
 
-            info = {'wsgi.status_code': int(status.split()[0]),
-                    'wsgi.path_info': environ.get('PATH_INFO'),
-                    'wsgi.request_length': environ.get('CONTENT_LENGTH', 0),
-                    'wsgi.response_length': resp_length}
-            metrics.append(metric("wsgi.requests", value=1,
+            info = {'path_info': environ.get('PATH_INFO')}
+            metrics.append(metric("request.length", value=req_length,
                                   tags=info))
+            metrics.append(metric("response.length", value=resp_length,
+                                  tags=info))
+            info['status_code'] = int(status.split()[0])
+            metrics.append(metric("request.count", value=1,
+                                  tags=info))
+
             return start_response(status, response_headers, exc_info)
+
+        start = time.perf_counter()
 
         response = self._app(environ, wrap_start_response)
 
         elapsed_secs = (time.perf_counter() - start) * 1000
-        metrics.append(metric("wsgi.duration.ms", elapsed_secs))
+        metrics.append(metric("request.duration.ms", elapsed_secs))
 
         self._registry.add_metrics(metrics)
         return response
