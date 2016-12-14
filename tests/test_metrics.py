@@ -17,6 +17,11 @@ class MetricsTest(TestCase):
         self.assertEqual({'key': 'value'}, m.tags)
 
     @istest
+    def ensure_value_is_float(self):
+        m = metric('testing', 5, {'key': 'value'})
+        self.assertIsInstance(m.values['value'], float)
+
+    @istest
     def metric_extra_tags(self):
         m = metric('testing', 5, {'key': 'value'})
         m.extra_tags({'other': 'some'})

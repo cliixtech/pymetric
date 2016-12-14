@@ -49,7 +49,7 @@ class _Metric:
 
 def metric(name, value=1, tags=None):
     tags = tags if tags else {}
-    values = {"value": value}
+    values = {"value": float(value)}
     return _Metric(name, values, tags)
 
 
