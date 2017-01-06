@@ -1,6 +1,7 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 from setuptools import setup, find_packages
+from pymetric import __VERSION__ as version
 
 
 def get_requirements(filename):
@@ -19,13 +20,14 @@ def get_requirements(filename):
 
 setup(
     name='pymetric',
-    version=1.4,
+    version=version,
     description=('Simple abstraction layer for pushing metrics to influx '
                  'periodically. Includes a wsgi middleware for compute '
                  'metrics for web apps'),
+    url='https://github.com/cliixtech/pymetric',
     author='Cliix Inc',
     author_email='dq@cliix.io',
-    url='https://github.com/cliixtech/pymetric',
+    license="GPLv3",
     classifiers=[
         'Environment :: Web Environment',
         "Programming Language :: Python",
@@ -33,7 +35,7 @@ setup(
         'Operating System :: OS Independent',
         'Topic :: Software Development :: Libraries :: Python Modules'
     ],
-    license='GPLv3',
+    keywords='pymetric metrics influx uwsgi flask',
     packages=find_packages(exclude=['tests']),
     test_suite='nose.collector',
     tests_require=get_requirements('dev_requirements.txt'),
