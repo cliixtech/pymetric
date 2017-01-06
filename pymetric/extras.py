@@ -4,10 +4,9 @@ from pymetric.metrics import MetricsRegistry, metric
 
 
 class MetricWsgiApp:
-    def __init__(self, app, influx, tags, interval):
+    def __init__(self, app, registry):
         self._app = app
-        self._registry = MetricsRegistry(influx, interval, tags)
-        self._registry.start()
+        self._registry = registry = registry
 
     def __call__(self, environ, start_response):
         metrics = []
@@ -42,7 +41,10 @@ class MetricWsgiApp:
         return response
 
 
-def instrument_flask(flask_app, influx, tags=None, interval=5):
-    flask_app.wsgi_app = MetricWsgiApp(flask_app.wsgi_app, influx, tags,
-                                       interval)
+def instrument_flask(flask_app, registry):
+    flask_app.wsgi_app = MetricWsgiApp(flask_app.wsgi_app, registry)
     return flask_app
+
+
+def create_registry(influx, interval=5, tags=None):
+        return MetricsRegistry(influx, interval, tags)
